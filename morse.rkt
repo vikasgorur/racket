@@ -52,23 +52,30 @@
 
 ;; Configuration
 ;;
-;; See https://arachnoid.com/morse_code/
-;;
-;; All durations are in number of frames, assuming 44100 frames per second.
+;; See https://en.wikipedia.org/wiki/Morse_code#Representation.2C_timing.2C_and_speeds for timing multiples
+
+;; Sampling rate - frames per second
 (define *fps* 44100)
 
+;; Desired words per minute
 (define *wpm* 13)
 
+;; Dot constant - see https://arachnoid.com/morse_code/ 
 (define *dc* 1.2)
 
+;; Length of one dot in frames
 (define *dot-length* (round (* (/ *dc* *wpm*) *fps*)))
 
+;; Length of dash in frames
 (define *dash-length* (* *dot-length* 3))
 
+;; Pause between tones within a letter
 (define *tone-pause* *dot-length*)
 
+;; Pause between letters
 (define *letter-pause* (* *dot-length* 3))
 
+;; Pause between words
 (define *word-pause* (* *dot-length* 7))
 
 ;; Sound generation
