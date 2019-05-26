@@ -52,16 +52,24 @@
 
 ;; Configuration
 ;;
+;; See https://arachnoid.com/morse_code/
+;;
 ;; All durations are in number of frames, assuming 44100 frames per second.
-(define *dot-length* 4000)
+(define *fps* 44100)
 
-(define *dash-length* (* *dot-length* 4))
+(define *wpm* 13)
 
-(define *tone-pause* (round (/ *dot-length* 8)))
+(define *dc* 1.2)
 
-(define *letter-pause* (round (* *dot-length* 4)))
+(define *dot-length* (round (* (/ *dc* *wpm*) *fps*)))
 
-(define *word-pause* (* *letter-pause* 4))
+(define *dash-length* (* *dot-length* 3))
+
+(define *tone-pause* *dot-length*)
+
+(define *letter-pause* (* *dot-length* 3))
+
+(define *word-pause* (* *dot-length* 7))
 
 ;; Sound generation
 
