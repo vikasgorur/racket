@@ -96,31 +96,29 @@
     [(dot) dot-sound]
     [(dash) dash-sound]))
 
+;; Call fn on each element of xs and append the results together
+;; after adding a silence of `pause` duration after each result
+(define (map-with-pause fn pause xs)
+  (apply rs-append
+         (map (lambda (x)
+                (rs-append (fn x)
+                           (silence pause)))
+              xs)))
+
 ;; Returns a sound for a single morse letter
 (define (mletter->sound mletter)
-  (apply rs-append
-         (map (lambda (sym)
-                (rs-append (symbol->sound sym)
-                           (silence *tone-pause*)))
-              mletter)))
+  (map-with-pause symbol->sound *tone-pause* mletter))
 
 ;; Returns a sound for a single morse word
-(define (mword->sound mletters)
-  (apply rs-append
-         (map (lambda (letter)
-                (rs-append (mletter->sound letter)
-                           (silence *letter-pause*)))
-              mletters)))
+(define (mword->sound mword)
+  (map-with-pause mletter->sound *letter-pause* mword))
 
 ;; Returns a sound for a string containing words separated by a space
 (define (sentence->sound str)
   (let ([words (string-split str " ")])
-    (apply rs-append
-           (map (lambda (word)
-                  (rs-append (mword->sound (word->morse word))
-                             (silence *word-pause*)))
-                words))))
-    
+    (map-with-pause (lambda (word) (mword->sound (word->morse word)))
+                    *word-pause*
+                    words)))    
 
 (define (play-sentence str)
   (play (sentence->sound str)))
